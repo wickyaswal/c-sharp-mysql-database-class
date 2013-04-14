@@ -5,6 +5,12 @@ A C# database class for the MySQL database engine.
 The SimpleORM class has some methods like the ORM(Eloquent) of the php Laravel framework.
 
 ## To use the class
+
+#### 0. Download the ADO.net drivers for MySQL here :
+http://dev.mysql.com/downloads/connector/net/
+
+Add the ' MySql.Data.MySqlClient' Namespace.
+
 #### 1. Edit the 'connectionstring' with your database settings in the Settings.settings file which is located in Properties folder.
 ```
 connectionstring:
