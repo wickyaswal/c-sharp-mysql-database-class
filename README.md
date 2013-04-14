@@ -11,7 +11,7 @@ Server=localhost;Database=testdb;Uid=yourdatabaseusername;Pwd=the password;
 
 ```
 #### 2. Create the instance 
-```csharp
+```
 // The instance 
 Db db = new Db();
 ```
@@ -30,9 +30,11 @@ class functions.
 
 #### Fetching everything from the table
 ```php
-<?php
-// Fetch whole table
-$persons = $db->query("SELECT * FROM persons");
+// Select
+dgv_persons.DataSource = db.query("select * FROM persons");
+
+// Quickly select a table
+dgv_persons.DataSource = db.table("persons"); 
 ```
 #### Fetching with Bindings (ANTI-SQL-INJECTION):
 Binding parameters is the best way to prevent SQL injection. The class prepares your SQL query and binds the parameters
@@ -40,28 +42,26 @@ afterwards.
 
 There are three different ways to bind parameters.
 ```php
-<?php
 // 1. Read friendly method  
-$db->bind("id","1");
-$db->bind("firstname","John");
-$person   =  $db->query("SELECT * FROM Persons WHERE firstname = :firstname AND id = :id");
+db.bind("id", "1");
+db.bind("id", "1");
+db.query("SELECT * FROM Persons WHERE firstname = @firstname AND id = @id");
 
 // 2. Bind more parameters
-$db->bindMore(array("firstname"=>"John","id"=>"1"));
-$person   =  $db->query("SELECT * FROM Persons WHERE firstname = :firstname AND id = :id"));
+db.bind(new string[] { "id", "67" });
+string[] saPerson = db.row("SELECT * FROM persons WHERE id = @id");
 
 // 3. Or just give the parameters to the method
-$person   =  $db->query("SELECT * FROM Persons WHERE firstname = :firstname",array("firstname"=>"John","id"=>"1"));
+string[] saPerson = db.row("SELECT * FROM persons WHERE id = @id", new string[] { "id", "67" });
 ```
 
-More about SQL injection prevention : http://indieteq.com/index/readmore/how-to-prevent-sql-injection-in-php
-
 #### Fetching Row:
-This method always returns only 1 row.
+This method always returns only 1 row ( string array)
 ```php
 <?php
 // Fetch a row
-$ages     =  $db->row("SELECT * FROM Persons WHERE  id = :id", array("id"=>"1"));
+db.bind("id", "1");
+string[] sperson = db.row("SELECT * FROM persons WHERE id = @id");
 ```
 ##### Result
 | id | firstname | lastname | sex | age
@@ -72,8 +72,7 @@ This method returns only one single value of a record.
 ```php
 <?php
 // Fetch one single value
-$db->bind("id","3");
-$firstname = $db->single("SELECT firstname FROM Persons WHERE id = :id");
+string age = db.single("SELECT firstname FROM persons WHERE id = @id", new string[]{"id", "3"});
 ```
 ##### Result
 |firstname
@@ -81,9 +80,9 @@ $firstname = $db->single("SELECT firstname FROM Persons WHERE id = :id");
 | Zoe
 #### Fetching Column:
 ```php
-<?php
-// Fetch a column
-$names    =  $db->column("SELECT Firstname FROM Persons");
+ // Select Column
+// Returns List<string>
+ cb_column.DataSource = db.column("SELECT age FROM persons");
 ```
 ##### Result
 |firstname | 
@@ -99,50 +98,37 @@ When executing the delete, update, or insert statement by using the query method
 <?php
 
 // Delete
-$delete   =  $db->query("DELETE FROM Persons WHERE Id = :id", array("id"=>"1"));
+int deleted = db.nQuery("DELETE FROM persons WHERE id = @id", new string[]{"id", "5"});
+
+      // Do something with the data
+            if (deleted > 0) { 
+                 MessageBox.Show("Succesfully deleted the person !");
+            }    
 
 // Update
-$update   =  $db->query("UPDATE Persons SET firstname = :f WHERE Id = :id", array("f"=>"Jan","id"=>"32"));
+db.bind(new string[] { "id", "1" ,"name","jinx"});
+           
+int updated = db.nQuery("UPDATE persons SET Firstname=@name WHERE id = @id");
 
-// Insert
-$insert   =  $db->query("INSERT INTO Persons(Firstname,Age) VALUES(:f,:age)", array("f"=>"Vivek","age"=>"20"));
+ // Create/Insert
+ db.bind(new string[] { "f", "test", "l", "test", "s", "F", "a", "33"});
 
-// Do something with the data 
-if($insert > 0 ) {
-  return 'Succesfully created a new person !';
-}
-
+int created = db.nQuery("INSERT INTO `persons` (`Firstname`, `Lastname`, `Sex`, `Age`) VALUES(@f,@l,@s,@a)");
+            
 ```
 ## Method parameters
 Every method which executes a query has the optional parameter called bindings.
 
-The <i>row</i> and the <i>query</i> method have a third optional parameter  which is the fetch style.
-The default fetch style is <i>PDO::FETCH_ASSOC</i> which returns an associative array.
-
-Here an example :
-
-```php
-<?php
-  // Fetch style as third parameter
-  $person_num =     $db->row("SELECT * FROM Persons WHERE id = :id", array("id"=>"1"), PDO::FETCH_NUM);
-
-  print_r($person_num);
-  // Array ( [0] => 1 [1] => Johny [2] => Doe [3] => M [4] => 19 )
-    
-```
-More info about the PDO fetchstyle : http://php.net/manual/en/pdostatement.fetch.php
-
-
-EasyCRUD
+SimpleORM
 ============================
-The easyCRUD is a class which you can use to easily execute basic SQL operations like(insert, update, select, delete) on your database. 
+The SimpleORM is a class which you can use to easily execute basic SQL operations like(insert, update, select, delete) on your database. 
+
+It's heavily inspired by the Eloquent class of the Laravel framework. 
 It uses the database class I've created to execute the SQL queries.
 
-Actually it's just a little ORM class.
-
-## How to use easyCRUD
-#### 1. First, create a new class. Then require the easyCRUD class.
-#### 2. Extend your class to the base class Crud and add the following fields to the class.
+## How to use SimpleORM
+#### 1. First, create a new class.
+#### 2. Extend your class to the base class SimpleORM and add the following fields to the class.
 #### Example class :
 ```php
 <?php
