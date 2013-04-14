@@ -1,35 +1,20 @@
-PDO Database Class
+C# MySQL database class
 ============================
 
-A database class for PHP-MySQL which uses the PDO extension.
+A database class for C# with the MySQL database engine.
 
 ## To use the class
-#### 1. Edit the database settings in the settings.ini.php
+#### 1. Edit the 'connectionstring' in the Settings.settings file which is located in Properties folder.
 ```
-[SQL]
-host = localhost
-user = root
-password = 
-dbname = yourdatabase
-```
-#### 2. Require the class in your project
-```php
-<?php
-require("Db.class.php");
-```
-#### 3. Create the instance 
-```php
-<?php
-// The instance
-$db = new Db();
-```
-#### 4.  Logs - Modify the read/write rights of the root folder
+connectionstring:
+Server=localhost;Database=testdb;Uid=yourdatabaseusername;Pwd=the password;
 
-Everytime an exception is thrown by the database class a log file gets created or modified.
-These logs are stored in the logs directory. Which means the database class needs write access for the logs folder.
-If the files are on a webserver you'll have to modify the rights of the root folder otherwise you'll get a "Permission denied" error.
-
-The log file is a simple plain text file with the current date('year-month-day') as filename.
+```
+#### 2. Create the instance 
+```csharp
+// The instance 
+Db db = new Db();
+```
 
 ## Examples
 Below some examples of the basic functions of the database class. I've included a SQL dump so you can easily test the database
