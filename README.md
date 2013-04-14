@@ -8,7 +8,6 @@ A database class for C# with the MySQL database engine.
 ```
 connectionstring:
 Server=localhost;Database=testdb;Uid=yourdatabaseusername;Pwd=the password;
-
 ```
 #### 2. Create the instance 
 ```
@@ -48,17 +47,16 @@ db.bind("id", "1");
 db.query("SELECT * FROM Persons WHERE firstname = @firstname AND id = @id");
 
 // 2. Bind more parameters
-db.bind(new string[] { "id", "67" });
-string[] saPerson = db.row("SELECT * FROM persons WHERE id = @id");
+db.bind(new string[] { "id", "1" });
+string[] saPerson = db.row("SELECT * FROM persons WHERE id = @1");
 
 // 3. Or just give the parameters to the method
-string[] saPerson = db.row("SELECT * FROM persons WHERE id = @id", new string[] { "id", "67" });
+string[] saPerson = db.row("SELECT * FROM persons WHERE id = @id", new string[] { "id", "1" });
 ```
 
 #### Fetching Row:
 This method always returns only 1 row ( string array)
 ```php
-<?php
 // Fetch a row
 db.bind("id", "1");
 string[] sperson = db.row("SELECT * FROM persons WHERE id = @id");
@@ -80,7 +78,7 @@ string age = db.single("SELECT firstname FROM persons WHERE id = @id", new strin
 | Zoe
 #### Fetching Column:
 ```php
- // Select Column
+// Select Column
 // Returns List<string>
  cb_column.DataSource = db.column("SELECT age FROM persons");
 ```
@@ -100,18 +98,19 @@ When executing the delete, update, or insert statement by using the query method
 // Delete
 int deleted = db.nQuery("DELETE FROM persons WHERE id = @id", new string[]{"id", "5"});
 
-      // Do something with the data
-            if (deleted > 0) { 
-                 MessageBox.Show("Succesfully deleted the person !");
-            }    
+ // Do something with the data
+if (deleted > 0) 
+{ 
+   MessageBox.Show("Succesfully deleted the person !");
+}    
 
 // Update
 db.bind(new string[] { "id", "1" ,"name","jinx"});
            
 int updated = db.nQuery("UPDATE persons SET Firstname=@name WHERE id = @id");
 
- // Create/Insert
- db.bind(new string[] { "f", "test", "l", "test", "s", "F", "a", "33"});
+// Create/Insert
+db.bind(new string[] { "f", "test", "l", "test", "s", "F", "a", "33"});
 
 int created = db.nQuery("INSERT INTO `persons` (`Firstname`, `Lastname`, `Sex`, `Age`) VALUES(@f,@l,@s,@a)");
             
@@ -124,91 +123,136 @@ SimpleORM
 The SimpleORM is a class which you can use to easily execute basic SQL operations like(insert, update, select, delete) on your database. 
 
 It's heavily inspired by the Eloquent class of the Laravel framework. 
-It uses the database class I've created to execute the SQL queries.
+It uses the same database class I've created to execute the SQL queries.
 
 ## How to use SimpleORM
 #### 1. First, create a new class.
-#### 2. Extend your class to the base class SimpleORM and add the following fields to the class.
+#### 2. Extend your class to the base class SimpleORM and set the following fields of the class in the constructor.
+#### 3. For using SimpleORM you must specify the fields of the table using getters and setters.
 #### Example class :
 ```php
-<?php
-require_once("easyCRUD.class.php");
- 
-class YourClass  Extends Crud {
- 
-  # The table you want to perform the database actions on
-  protected $table = 'persons';
+class Person : SimpleORM
+    {
+        private int id;
+        private string firstname;
+        private string lastname;
+        private string sex;
+        private int age;
 
-  # Primary Key of the table
-  protected $pk  = 'id';
-  
-}
+        public int _id {
+            get { return id;  }
+            set { id = value; }
+        }
+
+        public string _firstname {
+            get {   return firstname;  }
+            set {   firstname = value; }
+        }
+        
+        public string _lastname {
+            get { return lastname;  }
+            set { lastname = value; }
+        }
+
+        public string _sex {
+            get { return sex;  }
+            set { sex = value; }
+        }
+
+        public int _age {
+            get { return age;  }
+            set { age = value; }
+        }
+
+        public Person() 
+        {
+           // The table 
+            table_ = "persons";
+           // Primary key of the table
+           pk_ = "id";
+        }
+     
+    }
 ```
 
-## EasyCRUD in action.
+## SimpleORM in action.
 
 #### Creating a new person
 ```php
-<?php
 // First we"ll have create the instance of the class
-$person = new person();
- 
+Person person_a = new Person();
+
 // Create new person
-$person->Firstname  = "Kona";
-$person->Age        = "20";
-$person->Sex        = "F";
-$created            = $person->Create();
- 
-//  Or give the bindings to the constructor
-$person  = new person(array("Firstname"=>"Kona","age"=>"20","sex"=>"F"));
-$created = person->Create();
+person_a._firstname = "Vivek";
+person_a._lastname = "Aswal";
+person_a._age = 20;
+person_a._sex = "M";
+
+int created = person_a.create();
  
 // SQL Equivalent
 "INSERT INTO persons (Firstname,Age,Sex) VALUES ('Kona','20','F')"
 ```
+#### Mass create 
+It's also possible to easily create more persons at a time.
+
+```php
+
+// The list with all the persons
+List<object> persons = new List<object>();
+            
+// Person A
+person_a._firstname = "Vivek";
+person_a._lastname = "Aswal";
+person_a._age = 20;
+person_a._sex = "M";
+
+// Person B
+Person person_b = new Person();
+person_b._firstname = "Kader";
+person_b._lastname = "Khan";
+person_b._age  = 65;
+person_b._sex = "M";
+
+// Add persons to List
+persons.Add(person_a);
+persons.Add(person_b);
+
+// Create these persons
+int crea = person_a.create(persons);
+```
+
 #### Deleting a person
 ```php
-<?php
-// Delete person
-$person->Id  = "17";
-$deleted     = $person->Delete();
- 
-// Shorthand method, give id as parameter
-$deleted     = $person->Delete(17);
+// Give id as parameter
+int del = person_a.delete(2);
  
 // SQL Equivalent
-"DELETE FROM persons WHERE Id = 17 LIMIT 1"
+"DELETE FROM persons WHERE Id = 1 LIMIT 1"
 ```
 #### Saving person's data
 ```php
 <?php
 // Update personal data
-$person->Firstname = "John";
-$person->Age  = "20";
-$person->Sex = "F";
-$person->Id  = "4"; 
+person_a._firstname = "GOD";
+person_a._age = 20;
+person_a._sex = 'F';
+
+// Parameter is the id of the person
 // Returns affected rows
-$saved = $person->Save();
- 
-//  Or give the bindings to the constructor
-$person = new person(array("Firstname"=>"John","age"=>"20","sex"=>"F","Id"=>"4"));
-$saved = $person->Save();
- 
+int save = person_a.save(1);
+
 // SQL Equivalent
-"UPDATE persons SET Firstname = 'John',Age = 20, Sex = 'F' WHERE Id= 4"
+"UPDATE persons SET Firstname = 'GOD',Age = 20, Sex = 'F' WHERE Id= 1"
 ```
 #### Finding a person
 ```php
-<?php
-// Find person
-$person->Id = "1";
-$person->Find();
 
-echo $person->firstname;
-// Johny
- 
-// Shorthand method, give id as parameter
-$person->Find(1); 
+// Find person
+// You'll have to explicit convert the result
+person_a = (Person)person_a.find(1);
+
+Console.Write(person_a._firstname);
  
 // SQL Equivalent
 "SELECT * FROM persons WHERE Id = 1"
@@ -217,8 +261,35 @@ $person->Find(1);
 ```php
 <?php
 // Finding all person
-$persons = $person->all(); 
- 
+// Return type is Datatable
+
+dgv_persons.DataSource = person_a.all();
+
 // SQL Equivalent
 "SELECT * FROM persons 
 ```
+
+####  Aggregates methods
+```php
+ double min_age = person_a.min("age");
+
+ double max_age = person_a.max("age");
+
+ double avg_age = person_a.avg("age");
+
+ double count_age = person_a.count("age");
+
+ double sum_age   = person_a.sum("age");
+```
+
+####  To-do list 
+
+- Create test-cases
+- Specify return value for mass create method
+- Update this file (A)
+- Add comments 
+- Add more methods :
+  - Where()
+  - Model relationships 
+  - Eager loading
+  - Lazy loading
