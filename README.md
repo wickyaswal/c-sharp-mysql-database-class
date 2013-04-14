@@ -43,12 +43,11 @@ There are three different ways to bind parameters.
 ```php
 // 1. Read friendly method  
 db.bind("id", "1");
-db.bind("id", "1");
 db.query("SELECT * FROM Persons WHERE firstname = @firstname AND id = @id");
 
 // 2. Bind more parameters
-db.bind(new string[] { "id", "1" });
-string[] saPerson = db.row("SELECT * FROM persons WHERE id = @1");
+db.bind(new string[] { "id", "1", "f", "John" });
+string[] saPerson = db.row("SELECT * FROM persons WHERE id = @id AND firstname = @f");
 
 // 3. Or just give the parameters to the method
 string[] saPerson = db.row("SELECT * FROM persons WHERE id = @id", new string[] { "id", "1" });
@@ -128,7 +127,7 @@ It uses the same database class I've created to execute the SQL queries.
 ## How to use SimpleORM
 #### 1. First, create a new class.
 #### 2. Extend your class to the base class SimpleORM and set the following fields of the class in the constructor.
-#### 3. For using SimpleORM you must specify the fields of the table using getters and setters.
+#### 3. For using SimpleORM you must specify the fields of the (database)table using getters and setters.
 #### Example class :
 ```php
 class Person : SimpleORM
@@ -191,7 +190,7 @@ person_a._sex = "M";
 int created = person_a.create();
  
 // SQL Equivalent
-"INSERT INTO persons (Firstname,Age,Sex) VALUES ('Kona','20','F')"
+"INSERT INTO persons (Firstname,Lastname,Age,Sex) VALUES ('Vivek','Aswal','20','M')"
 ```
 #### Mass create 
 It's also possible to easily create more persons at a time.
@@ -228,7 +227,7 @@ int crea = person_a.create(persons);
 int del = person_a.delete(2);
  
 // SQL Equivalent
-"DELETE FROM persons WHERE Id = 1 LIMIT 1"
+"DELETE FROM persons WHERE Id = 2 LIMIT 1"
 ```
 #### Saving person's data
 ```php
@@ -250,6 +249,7 @@ int save = person_a.save(1);
 
 // Find person
 // You'll have to explicit convert the result
+// Parameter is id of the person
 person_a = (Person)person_a.find(1);
 
 Console.Write(person_a._firstname);
