@@ -1,10 +1,11 @@
 C# MySQL database class
 ============================
 
-A database class for C# with the MySQL database engine.
+A C# database class for the MySQL database engine. 
+The SimpleORM class has some methods like the ORM(Eloquent) of the php Laravel framework.
 
 ## To use the class
-#### 1. Edit the 'connectionstring' in the Settings.settings file which is located in Properties folder.
+#### 1. Edit the 'connectionstring' with your database settings in the Settings.settings file which is located in Properties folder.
 ```
 connectionstring:
 Server=localhost;Database=testdb;Uid=yourdatabaseusername;Pwd=the password;
