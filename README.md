@@ -20,7 +20,7 @@ connectionstring:
 Server=localhost;Database=testdb;Uid=yourdatabaseusername;Pwd=the password;
 ```
 #### 2. Create the instance 
-```
+```cs
 // The instance 
 Db db = new Db();
 ```
@@ -38,7 +38,7 @@ class functions.
 | 5       |        Kader|     Khan    | M | 56
 
 #### Fetching everything from the table
-```php
+```cs
 // Select
 dgv_persons.DataSource = db.query("select * FROM persons");
 
@@ -50,7 +50,7 @@ Binding parameters is the best way to prevent SQL injection. The class prepares 
 afterwards.
 
 There are three different ways to bind parameters.
-```php
+```cs
 // 1. Read friendly method  
 db.bind("id", "1");
 db.query("SELECT * FROM Persons WHERE firstname = @firstname AND id = @id");
@@ -65,7 +65,7 @@ string[] saPerson = db.row("SELECT * FROM persons WHERE id = @id", new string[] 
 
 #### Fetching Row:
 This method always returns only 1 row ( string array)
-```php
+```cs
 // Fetch a row
 db.bind("id", "1");
 string[] sperson = db.row("SELECT * FROM persons WHERE id = @id");
@@ -86,7 +86,7 @@ string age = db.single("SELECT firstname FROM persons WHERE id = @id", new strin
 |:------------:
 | Zoe
 #### Fetching Column:
-```php
+```cs
 // Select Column
 // Returns List<string>
  cb_column.DataSource = db.column("SELECT age FROM persons");
@@ -101,9 +101,7 @@ string age = db.single("SELECT firstname FROM persons WHERE id = @id", new strin
 |        Kader
 ### Delete / Update / Insert
 When executing the delete, update, or insert statement by using the query method the affected rows will be returned.
-```php
-<?php
-
+```cs
 // Delete
 int deleted = db.nQuery("DELETE FROM persons WHERE id = @id", new string[]{"id", "5"});
 
@@ -139,7 +137,7 @@ It uses the same database class I've created to execute the SQL queries.
 #### 2. Extend your class to the base class SimpleORM and set the following fields of the class in the constructor.
 #### 3. For using SimpleORM you must specify the fields of the (database)table using getters and setters.
 #### Example class :
-```php
+```cs
 class Person : SimpleORM
     {
         private int id;
@@ -187,7 +185,7 @@ class Person : SimpleORM
 ## SimpleORM in action.
 
 #### Creating a new person
-```php
+```cs
 // First we"ll have create the instance of the class
 Person person_a = new Person();
 
@@ -205,7 +203,7 @@ int created = person_a.create();
 #### Mass create 
 It's also possible to easily create more persons at a time.
 
-```php
+```cs
 
 // The list with all the persons
 List<object> persons = new List<object>();
@@ -232,7 +230,7 @@ int crea = person_a.create(persons);
 ```
 
 #### Deleting a person
-```php
+```cs
 // Give id as parameter
 int del = person_a.delete(2);
  
@@ -240,8 +238,8 @@ int del = person_a.delete(2);
 "DELETE FROM persons WHERE Id = 2 LIMIT 1"
 ```
 #### Saving person's data
-```php
-<?php
+```cs
+
 // Update personal data
 person_a._firstname = "GOD";
 person_a._age = 20;
@@ -255,7 +253,7 @@ int save = person_a.save(1);
 "UPDATE persons SET Firstname = 'GOD',Age = 20, Sex = 'F' WHERE Id= 1"
 ```
 #### Finding a person
-```php
+```cs
 
 // Find person
 // You'll have to explicit convert the result
@@ -268,8 +266,8 @@ Console.Write(person_a._firstname);
 "SELECT * FROM persons WHERE Id = 1"
 ```
 #### Getting all the persons
-```php
-<?php
+```cs
+
 // Finding all person
 // Return type is Datatable
 
@@ -280,7 +278,7 @@ dgv_persons.DataSource = person_a.all();
 ```
 
 ####  Aggregates methods
-```php
+```cs
  double min_age = person_a.min("age");
 
  double max_age = person_a.max("age");
@@ -294,10 +292,8 @@ dgv_persons.DataSource = person_a.all();
 
 ####  To-do list 
 
-- Create test-cases
-- Specify return value for mass create method
-- Update this file (A)
-- Add comments 
+- Create TEST-CASES
+- COMMENTIFY THE FILE
 - Add more methods :
   - Where()
   - Model relationships 
