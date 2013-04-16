@@ -203,13 +203,15 @@ namespace AsanDB
         /// <returns>Number of affacted rows</returns>
         public int create(object[] obj) {
 
+            int rows_affected = 0;
+
             foreach (object o in obj)
             {
                 bindProperties(o);
-                this.create();
+                rows_affected += this.create();
             }
 
-            return 0;
+            return rows_affected;
         }
 
         /// <summary>
@@ -219,13 +221,15 @@ namespace AsanDB
         /// <returns></returns>
         public int create(List<object> obj) 
         {
+            int rows_affected = 0;
+
             foreach (object o in obj)
             {
                 bindProperties(o);
-                this.create();
+                rows_affected += this.create();
             }
 
-            return 0;
+            return rows_affected;
         }
 
         /// <summary>
