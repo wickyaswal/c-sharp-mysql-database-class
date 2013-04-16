@@ -77,7 +77,6 @@ string[] sperson = db.row("SELECT * FROM persons WHERE id = @id");
 #### Fetching Single Value:
 This method returns only one single value of a record.
 ```php
-<?php
 // Fetch one single value
 string age = db.single("SELECT firstname FROM persons WHERE id = @id", new string[]{"id", "3"});
 ```
