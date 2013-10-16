@@ -87,7 +87,7 @@ namespace AsanDB
                 {
                     parameters.ForEach(delegate(string parameter)
                     {
-                        string[] sparameters = parameter.ToString().Split('.');
+                        string[] sparameters = parameter.ToString().Split('\x7F');
                         command.Parameters.AddWithValue(sparameters[0], sparameters[1]);
                     });
                 }
@@ -110,7 +110,7 @@ namespace AsanDB
 
         public void bind(string field, string value)
         {
-            this.parameters.Add("@" + field + "." + value);
+             parameters.Add(":" + field + "\x7F" + value);
         }
 
         public void bind(string[] fields)
