@@ -124,6 +124,24 @@ namespace AsanDB
                 }
             }
         }
+        
+        // Example:
+        // qBind(new string[] { "12", "John" });
+        // nQuery("SELECT * FROM User WHERE ID=:0 AND Name=:1");
+        /// <summary>
+        /// Bind multiple fields/values without identifier.
+        /// </summary>
+        /// <param name="fields"></param>
+        public void qBind(string[] fields)
+        {
+            if (fields != null)
+            {
+                for (int i = 0; i < fields.Length; i++)
+                {
+                    bind(i.ToString(), fields[i]);
+                }
+            }
+        }
 
         private DataTable execDatatable()
         {
