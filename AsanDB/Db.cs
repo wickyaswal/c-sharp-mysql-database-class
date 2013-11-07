@@ -110,7 +110,7 @@ namespace AsanDB
 
         public void bind(string field, string value)
         {
-             parameters.Add(":" + field + "\x7F" + value);
+             parameters.Add("@" + field + "\x7F" + value);
         }
 
         public void bind(string[] fields)
