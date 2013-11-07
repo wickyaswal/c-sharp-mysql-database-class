@@ -127,7 +127,7 @@ namespace AsanDB
         
         // Example:
         // qBind(new string[] { "12", "John" });
-        // nQuery("SELECT * FROM User WHERE ID=:0 AND Name=:1");
+        // nQuery("SELECT * FROM User WHERE ID=@0 AND Name=@1");
         /// <summary>
         /// Bind multiple fields/values without identifier.
         /// </summary>
